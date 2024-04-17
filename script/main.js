@@ -116,3 +116,33 @@ function equalsPressed() {
 
 // Call the clearDisplay function to initialize the display
 clearDisplay();
+
+// KEYBOARD SUPPORT
+window.addEventListener("keydown", function (event) {
+  const key = event.key;
+
+  // If a number key is pressed, append the corresponding number to the display
+  if (!isNaN(parseInt(key))) {
+    appendNumber(parseInt(key));
+  }
+
+  // If an operator key is pressed, perform the corresponding operation
+  if (key === "+" || key === "-" || key === "*" || key === "/") {
+    operatePressed(key);
+  }
+
+  // If the Enter key is pressed, calculate the result
+  if (key === "Enter") {
+    equalsPressed();
+  }
+
+  // If the Delete or Backspace key is pressed, delete the last character
+  if (key === "Delete" || key === "Backspace") {
+    deleteNums();
+  }
+
+  // If the Decimal key is pressed, append a decimal point
+  if (key === ".") {
+    appendDecimal();
+  }
+});
