@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculator</title>
-    <link rel="stylesheet" href="./styles/style.css" />
-  </head>
-  <body>
-    <main class="calculator">
-      <div class="display">0</div>
-      <button id="c" class="btn" onclick="clearDisplay()">C</button>
-      <button id="delete" class="btn" onclick="deleteNums()">B</button>
-      <button class="btn operator" onclick="operatePressed('/')">/</button>
-      <button class="btn operator" onclick="operatePressed('*')">*</button>
-      <button class="btn" onclick="appendNumber(7)">7</button>
-      <button class="btn" onclick="appendNumber(8)">8</button>
-      <button class="btn" onclick="appendNumber(9)">9</button>
-      <button class="btn operator" onclick="operatePressed('-')">-</button>
-      <button class="btn" onclick="appendNumber(4)">4</button>
-      <button class="btn" onclick="appendNumber(5)">5</button>
-      <button class="btn" onclick="appendNumber(6)">6</button>
-      <button class="btn operator" onclick="operatePressed('+')">+</button>
-      <button class="btn" onclick="appendNumber(1)">1</button>
-      <button class="btn" onclick="appendNumber(2)">2</button>
-      <button class="btn" onclick="appendNumber(3)">3</button>
-      <button id="equal" class="btn" onclick="equalsPressed()">=</button>
-      <button id="zero" class="btn" onclick="appendNumber(0)">0</button>
-      <button class="btn" onclick="appendDecimal()">.</button>
-    </main>
 
-    <script src="./script/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator</title>
+  <link rel="stylesheet" href="./styles/style.css" />
+</head>
+
+<body>
+  <main class="calculator">
+    <div class="display">0</div>
+    <button id="c" class="btn" onclick="clearDisplay()">C</button>
+    <button id="delete" class="btn" onclick="deleteNums()">B</button>
+    <button class="btn operator" onclick="operatePressed('/')"><img src="./images/icons/devision.svg"></button>
+    <button class="btn operator" onclick="operatePressed('*')"><img src="images/icons/multiply.svg"></button>
+    <button class="btn" onclick="appendNumber(7)">7</button>
+    <button class="btn" onclick="appendNumber(8)">8</button>
+    <button class="btn" onclick="appendNumber(9)">9</button>
+    <button class="btn operator" onclick="operatePressed('-')"><img src="./images/icons/minus.svg"></button>
+    <button class="btn" onclick="appendNumber(4)">4</button>
+    <button class="btn" onclick="appendNumber(5)">5</button>
+    <button class="btn" onclick="appendNumber(6)">6</button>
+    <button class="btn operator" onclick="operatePressed('+')"><img src="./images/icons/plus.svg"></button>
+    <button class="btn" onclick="appendNumber(1)">1</button>
+    <button class="btn" onclick="appendNumber(2)">2</button>
+    <button class="btn" onclick="appendNumber(3)">3</button>
+    <button id="equal" class="btn" onclick="equalsPressed()"><img src="./images/icons/equal.svg"></button>
+    <button id="zero" class="btn" onclick="appendNumber(0)">0</button>
+    <button class="btn" onclick="appendDecimal()">.</button>
+  </main>
+
+  <script src="./script/main.js"></script>
+</body>
+
 </html>
