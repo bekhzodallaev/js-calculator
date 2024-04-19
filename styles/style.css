@@ -61,13 +61,19 @@ body {
   width: 2.2rem;
 }
 
+.operator {
+  background: linear-gradient(to right bottom, rgba(244, 245, 247, 0.712), rgb(99, 107, 122)),
+    linear-gradient(to right bottom, rgba(99, 107, 122), rgb(99, 107, 122));
+}
+
 #zero {
   grid-column: span 2;
 }
 
 #equal {
   grid-row: span 2;
-  background-color: #D90429;
+  background: linear-gradient(to right bottom, rgba(247, 205, 212, 0.719), rgb(217, 4, 41)),
+    linear-gradient(rgba(217, 4, 41), rgb(217, 4, 41));
 }
 
 #equal:hover {
