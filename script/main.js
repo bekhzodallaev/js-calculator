@@ -58,7 +58,6 @@ function appendNumber(number) {
   }
 
   if (displayValue === "0" && number === 0) {
-    // Do nothing if current display is already 0 and incoming number is also 0
     return;
   }
 
