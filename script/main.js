@@ -17,7 +17,8 @@ function divide(a, b) {
   if (b === 0) {
     return "Error: Division by zero";
   }
-  return a / b;
+  let result = a / b;
+  return Math.round(result * 100) / 100;
 }
 
 function operate(operator, a, b) {
