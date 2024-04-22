@@ -10,8 +10,7 @@ body {
   background-color: rgb(221, 195, 195);
 }
 
-.container
-{
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,7 +61,6 @@ button:hover {
   text-align: right;
   word-break: break-all;
 }
-
 
 #previous-value {
   font-size: 1.5em;
