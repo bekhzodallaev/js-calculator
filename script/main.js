@@ -50,7 +50,10 @@ const display = {
         const currentValue = parseFloat(this.currentValue);
 
         if (isNaN(currentValue) || isNaN(previousValue)) return;
-        this.currentValue = this.calculator[this.operationType](previousValue, currentValue);
+        let result = this.calculator[this.operationType](previousValue, currentValue);
+        result = Math.round(result * 10000) / 10000;
+
+        this.currentValue = result.toString();
     },
 };
 
@@ -60,4 +63,42 @@ numberButtons.forEach((button) => {
 
 operatorButtons.forEach((button) => {
     button.addEventListener('click', () => display.compute(button.value));
+});
+
+document.addEventListener('keydown', (event) => {
+    const key = event.key;
+    const keyCode = event.keyCode;
+
+    if (!isNaN(key) && key !== ' ') {
+        display.addNumber(parseInt(key));
+    } else if (key === '.' || keyCode === 190 || keyCode === 110) {
+        display.addNumber('.');
+    }
+
+    if (key === '+' || key === '-' || key === '*' || key === '/' || keyCode === 187 || keyCode === 189 || keyCode === 88 || keyCode === 191) {
+        if (key === '+') display.compute('add');
+        else if (key === '-') display.compute('subtract');
+        else if (key === '*') display.compute('multiply');
+        else if (key === '/') display.compute('divide');
+        else if (keyCode === 187) display.compute('add');     
+        else if (keyCode === 189) display.compute('subtract');
+        else if (keyCode === 88) display.compute('multiply'); 
+        else if (keyCode === 191) display.compute('divide');
+    }
+
+    if (key === 'Escape') {
+        display.clearAll();
+    }
+
+    if (key === 'Backspace' || key === 'Delete') {
+        display.clear();
+    }
+});
+
+document.addEventListener('keypress', (event) => {
+    const key = event.key;
+
+    if (key === 'Enter') {
+        display.compute('equals');
+    }
 });
