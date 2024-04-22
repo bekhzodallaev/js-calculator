@@ -20,7 +20,13 @@ const display = {
         multiply: (num1, num2) => num1 * num2,
     },
     clear() {
-        this.currentValue = this.currentValue.toString().slice(0, -1);
+        if (this.currentValue === '') {
+            this.operationType = undefined;
+            this.currentValue = this.previousValue;
+            this.previousValue = '';
+        } else {
+            this.currentValue = this.currentValue.slice(0, -1);
+        }
         this.printValues();
     },
     clearAll() {
@@ -37,7 +43,11 @@ const display = {
         this.printValues();
     },
     addNumber(number) {
-        if (number === '.' && this.currentValue.includes('.')) return;
+        if (number === '.' && this.currentValue.includes('.')) return;   
+        const decimalIndex = this.currentValue.indexOf('.');
+        if (decimalIndex !== -1 && this.currentValue.length - decimalIndex > 2) {
+            return;
+        }
         this.currentValue = this.currentValue.toString() + number.toString();
         this.printValues();
     },
