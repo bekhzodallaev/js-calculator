@@ -1,148 +1,131 @@
-const display = document.querySelector(".display");
-const buttons = document.querySelectorAll(".btn");
+const displayPreviousValue = document.getElementById("previous-value");
+const displayCurrentValue = document.getElementById("current-value");
+const numberButtons = document.querySelectorAll(".number");
+const operatorButtons = document.querySelectorAll(".operator");
 
-function add(a, b) {
-  return a + b;
-}
+const display = {
+  currentValue: "",
+  previousValue: "",
+  operationType: undefined,
+  operators: {
+    add: "+",
+    divide: "/",
+    multiply: "x",
+    subtract: "-",
+  },
+  calculator: {
+    add: (num1, num2) => num1 + num2,
+    subtract: (num1, num2) => num1 - num2,
+    divide: (num1, num2) => num1 / num2,
+    multiply: (num1, num2) => num1 * num2,
+  },
+  clear() {
+    if (this.currentValue === "") {
+      this.operationType = undefined;
+      this.currentValue = this.previousValue;
+      this.previousValue = "";
+    } else {
+      this.currentValue = this.currentValue.slice(0, -1);
+    }
+    this.printValues();
+  },
+  clearAll() {
+    this.currentValue = "";
+    this.previousValue = "";
+    this.operationType = undefined;
+    this.printValues();
+  },
+  compute(operator) {
+    this.operationType !== "equals" && this.calculate();
+    this.operationType = operator;
+    this.previousValue = this.currentValue || this.previousValue;
+    this.currentValue = "";
+    this.printValues();
+  },
+  addNumber(number) {
+    if (number === "." && this.currentValue.includes(".")) return;
+    const decimalIndex = this.currentValue.indexOf(".");
+    if (decimalIndex !== -1 && this.currentValue.length - decimalIndex > 4) {
+      return;
+    }
 
-function subtract(a, b) {
-  return a - b;
-}
+    this.currentValue = this.currentValue.toString() + number.toString();
+    this.printValues();
+  },
+  printValues() {
+    displayCurrentValue.textContent = this.currentValue;
+    displayPreviousValue.textContent = `${this.previousValue} ${this.operators[this.operationType] || ""
+      }`;
+  },
+  calculate() {
+    const previousValue = parseFloat(this.previousValue);
+    const currentValue = parseFloat(this.currentValue);
 
-function multiply(a, b) {
-  return a * b;
-}
+    if (isNaN(currentValue) || isNaN(previousValue)) return;
+    let result = this.calculator[this.operationType](
+      previousValue,
+      currentValue
+    );
+    result = Math.round(result * 10000) / 10000;
 
-function divide(a, b) {
-  if (b === 0) {
-    return "Error: Division by zero";
-  }
-  return a / b;
-}
+    if (this.operationType === "divide") {
+      result = Math.round(result * 100) / 100; // Round to 2 decimal places
+    }
+    this.currentValue = result.toString();
+  },
+};
 
-function operate(operator, a, b) {
-  switch (operator) {
-    case "+":
-      return add(a, b);
-    case "-":
-      return subtract(a, b);
-    case "*":
-      return multiply(a, b);
-    case "/":
-      return divide(a, b);
-    default:
-      return "Invalid operator";
-  }
-}
+numberButtons.forEach((button) => {
+  button.addEventListener("click", () => display.addNumber(button.innerHTML));
+});
 
-function clearDisplay() {
-  display.textContent = "0";
-}
+operatorButtons.forEach((button) => {
+  button.addEventListener("click", () => display.compute(button.value));
+});
 
-function deleteNums() {
-  let displayValue = display.textContent;
+document.addEventListener("keydown", (event) => {
+  const key = event.key;
+  const keyCode = event.keyCode;
 
-  if (displayValue.length === 1 || displayValue === "Error") {
-    displayValue = "0";
-  } else {
-    displayValue = displayValue.slice(0, -1);
-  }
-  display.textContent = displayValue;
-  console.log(displayValue);
-}
-
-function appendNumber(number) {
-  let displayValue = display.textContent;
-
-  if (displayValue === "0") {
-    displayValue = number;
-  } else {
-    displayValue += number;
-  }
-  display.textContent = displayValue;
-}
-function appendDecimal() {
-  let displayValue = display.textContent;
-  displayValue += ".";
-  display.textContent = displayValue;
-}
-
-let firstNumber = "";
-let operation = "";
-
-function operatePressed(operator) {
-  let displayValue = display.textContent;
-
-  // Check if the operator is deleted
-  if (operator === "") {
-    // Update the operation without evaluating the previous operation
-    operation = operator;
-    display.textContent = displayValue.slice(0, -2); // Remove the deleted operator from display
-    return; // Exit the function
-  }
-
-  // If there's already an operation in progress, evaluate the previous operation
-  if (operation !== "" && displayValue !== "") {
-    equalsPressed();
-  }
-
-  firstNumber = parseFloat(displayValue);
-  operation = operator;
-  display.textContent += " " + operator + " ";
-}
-
-function equalsPressed() {
-  let displayValue = display.textContent;
-
-  // Split the display value to get the second number
-  let displayParts = displayValue.split(operation);
-
-  // Check if the split operation produced at least two parts
-  if (displayParts.length < 2) {
-    // Handle the case where the second number is missing
-    console.error("Invalid expression: Missing second number");
-    return;
+  if (!isNaN(key) && key !== " ") {
+    display.addNumber(parseInt(key));
+  } else if (key === "." || keyCode === 190 || keyCode === 110) {
+    display.addNumber(".");
   }
 
-  // Extract the second number and trim any whitespace
-  let secondNumber = parseFloat(displayParts[1].trim());
+  if (
+    key === "+" ||
+    key === "-" ||
+    key === "*" ||
+    key === "/" ||
+    keyCode === 187 ||
+    keyCode === 189 ||
+    keyCode === 88 ||
+    keyCode === 191
+  ) {
+    if (key === "+") display.compute("add");
+    else if (key === "-") display.compute("subtract");
+    else if (key === "*") display.compute("multiply");
+    else if (key === "/") display.compute("divide");
+    else if (keyCode === 187) display.compute("add");
+    else if (keyCode === 189) display.compute("subtract");
+    else if (keyCode === 88) display.compute("multiply");
+    else if (keyCode === 191) display.compute("divide");
+  }
 
-  // Calculate the result
-  let result = operate(operation, firstNumber, secondNumber);
-  display.textContent = result;
-  firstNumber = "";
-  operation = "";
-}
+  if (key === "Escape") {
+    display.clearAll();
+  }
 
-// Call the clearDisplay function to initialize the display
-clearDisplay();
+  if (key === "Backspace" || key === "Delete") {
+    display.clear();
+  }
+});
 
-// KEYBOARD SUPPORT
-window.addEventListener("keydown", function (event) {
+document.addEventListener("keypress", (event) => {
   const key = event.key;
 
-  // If a number key is pressed, append the corresponding number to the display
-  if (!isNaN(parseInt(key))) {
-    appendNumber(parseInt(key));
-  }
-
-  // If an operator key is pressed, perform the corresponding operation
-  if (key === "+" || key === "-" || key === "*" || key === "/") {
-    operatePressed(key);
-  }
-
-  // If the Enter key is pressed, calculate the result
   if (key === "Enter") {
-    equalsPressed();
-  }
-
-  // If the Delete or Backspace key is pressed, delete the last character
-  if (key === "Delete" || key === "Backspace") {
-    deleteNums();
-  }
-
-  // If the Decimal key is pressed, append a decimal point
-  if (key === ".") {
-    appendDecimal();
+    display.compute("equals");
   }
 });
