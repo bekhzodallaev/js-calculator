@@ -52,7 +52,7 @@ button:hover {
 
 .display {
   grid-column: 1 / 5;
-  background-color: #44c575;
+  background-color: #ecf9f1;
   padding: 1em;
   font-size: 1.5em;
   text-align: right;
@@ -64,8 +64,10 @@ button:hover {
 
 #previous-value {
   font-size: 1em;
+  color: #333;
 }
 
 #current-value {
   font-size: 1em;
+  color: #333;
 }
