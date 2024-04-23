@@ -22,7 +22,7 @@ function multiply(a, b) {
 }
 function divide(a, b) {
   if (b === 0) {
-    return "Error: Division by zero";
+    return Infinity;
   }
   return a / b;
 }
@@ -43,13 +43,6 @@ function operate(operator, a, b) {
 }
 function calculate() {
   let result = operate(expression[1], +expression[0], +expression[2]);
-  if (result === "Error: Division by zero") {
-    alert("Error: Division by zero");
-    expression.pop();
-    lastNumber = "";
-    displayValue = displayValue.slice(0, -1);
-    return displayValue;
-  }
   result = Math.round(result * 100) / 100;
   expression = [result];
   lastNumber = `${result}`;
