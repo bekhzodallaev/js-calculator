@@ -1,5 +1,4 @@
 body {
-  height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
   background-color: blueviolet;
   box-sizing: border-box;
@@ -24,7 +23,7 @@ h1 {
   align-items: center;
   justify-content: flex-end;
   background-color: rgba(255, 255, 255, 0.827);
-  height: 80px;
+  height: 100px;
   margin-bottom: 10px;
   border: 3px solid #ffffffad;
   font-size: 32px;
