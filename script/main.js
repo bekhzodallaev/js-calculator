@@ -1,7 +1,10 @@
 const displayPreviousValue = document.getElementById("previous-value");
-const displayCurrentValue = document.getElementById("current-value");
+let displayCurrentValue = document.getElementById("current-value");
 const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
+
+
+displayCurrentValue.textContent = 0;
 
 const display = {
   currentValue: "",
