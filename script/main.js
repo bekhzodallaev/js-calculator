@@ -43,6 +43,9 @@ const display = {
     this.printValues();
   },
   addNumber(number) {
+    console.log(number);
+    console.log(this.currentValue);
+    if (this.currentValue === "" && number === ".") return;
     if (number === "." && this.currentValue.includes(".")) return;
     const decimalIndex = this.currentValue.indexOf(".");
     if (decimalIndex !== -1 && this.currentValue.length - decimalIndex > 4) {
