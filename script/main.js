@@ -37,6 +37,7 @@ const display = {
     this.previousValue = "";
     this.operationType = undefined;
     this.printValues();
+    displayCurrentValue.textContent = 0;
   },
   compute(operator) {
     this.operationType !== "equals" && this.calculate();
