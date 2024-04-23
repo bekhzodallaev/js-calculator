@@ -1,132 +1,185 @@
-const displayPreviousValue = document.getElementById("previous-value");
-const displayCurrentValue = document.getElementById("current-value");
-const numberButtons = document.querySelectorAll(".number");
-const operatorButtons = document.querySelectorAll(".operator");
+const display = document.querySelector("#display");
+const buttons = document.querySelectorAll(".number, .operator");
+const dot_button = document.querySelector("#dot");
+const clear_button = document.querySelector("#clear");
+const delete_button = document.querySelector("#delete");
+const equals_button = document.querySelector("#equals");
 
-const display = {
-  currentValue: "",
-  previousValue: "",
-  operationType: undefined,
-  operators: {
-    add: "+",
-    divide: "/",
-    multiply: "x",
-    subtract: "-",
-  },
-  calculator: {
-    add: (num1, num2) => num1 + num2,
-    subtract: (num1, num2) => num1 - num2,
-    divide: (num1, num2) => num1 / num2,
-    multiply: (num1, num2) => num1 * num2,
-  },
-  clear() {
-    if (this.currentValue === "") {
-      this.operationType = undefined;
-      this.currentValue = this.previousValue;
-      this.previousValue = "";
-    } else {
-      this.currentValue = this.currentValue.slice(0, -1);
-    }
-    this.printValues();
-  },
-  clearAll() {
-    this.currentValue = "";
-    this.previousValue = "";
-    this.operationType = undefined;
-    this.printValues();
-  },
-  compute(operator) {
-    this.operationType !== "equals" && this.calculate();
-    this.operationType = operator;
-    this.previousValue = this.currentValue || this.previousValue;
-    this.currentValue = "";
-    this.printValues();
-  },
-  addNumber(number) {
-    if (number === "." && this.currentValue.includes(".")) return;
-    const decimalIndex = this.currentValue.indexOf(".");
-    if (decimalIndex !== -1 && this.currentValue.length - decimalIndex > 4) {
-      return;
-    }
+let expression = [];
+let display_value = "0";
+let last_number = "";
+let override = true;
 
-    this.currentValue = this.currentValue.toString() + number.toString();
-    this.printValues();
-  },
-  printValues() {
-    displayCurrentValue.textContent = this.currentValue;
-    displayPreviousValue.textContent = `${this.previousValue} ${
-      this.operators[this.operationType] || ""
-    }`;
-  },
-  calculate() {
-    const previousValue = parseFloat(this.previousValue);
-    const currentValue = parseFloat(this.currentValue);
+// ### Math Functions ###
+function add(a, b) {
+  return a + b;
+}
+function subtract(a, b) {
+  return a - b;
+}
+function multiply(a, b) {
+  return a * b;
+}
+function divide(a, b) {
+  if (b === 0) {
+    return "Error: Division by zero";
+  }
+  return a / b;
+}
+function operate(operator, a, b) {
+  a = parseFloat(a);
+  b = parseFloat(b);
 
-    if (isNaN(currentValue) || isNaN(previousValue)) return;
-    let result = this.calculator[this.operationType](
-      previousValue,
-      currentValue
-    );
-    result = Math.round(result * 10000) / 10000;
+  switch (operator) {
+    case "+":
+      return add(a, b);
+    case "-":
+      return subtract(a, b);
+    case "*":
+      return multiply(a, b);
+    case "/":
+      return divide(a, b);
+  }
+}
+function calculate() {
+  let result = operate(expression[1], +expression[0], +expression[2]);
+  if (result === "Error: Division by zero") {
+    expression.pop();
+    last_number = "";
+    display_value = display_value.slice(0, -1);
+    return display_value;
+  }
+  result = Math.round(result * 100) / 100;
+  expression = [result];
+  last_number = `${result}`;
+  display_value = `${result}`;
 
-    if (this.operationType === "divide") {
-      result = Math.round(result * 100) / 100; // Round to 2 decimal places
-    }
-    this.currentValue = result.toString();
-  },
-};
+  return result;
+}
 
-numberButtons.forEach((button) => {
-  button.addEventListener("click", () => display.addNumber(button.innerHTML));
-});
-
-operatorButtons.forEach((button) => {
-  button.addEventListener("click", () => display.compute(button.value));
-});
-
-document.addEventListener("keydown", (event) => {
-  const key = event.key;
-  const keyCode = event.keyCode;
-
-  if (!isNaN(key) && key !== " ") {
-    display.addNumber(parseInt(key));
-  } else if (key === "." || keyCode === 190 || keyCode === 110) {
-    display.addNumber(".");
+// ### UI Functions ###
+function clear() {
+  expression = [];
+  display_value = "0";
+  last_number = "";
+  override = true;
+  updateDisplay();
+}
+function updateDisplay() {
+  display.textContent = display_value;
+}
+function handleClick(button) {
+  if (button.classList.contains("number")) {
+    handleNumberClick(button.textContent.trim());
+  } else if (button.classList.contains("operator")) {
+    handleOperatorClick(button.textContent.trim());
+  }
+}
+function handleNumberClick(number) {
+  if (override) {
+    expression.pop();
+    display_value = "";
+    last_number = "";
+    override = false;
   }
 
+  if (last_number.includes(".") && last_number.split(".")[1].length === 3) {
+    return;
+  }
+
+  if (last_number === "0" && number === "0") {
+    return;
+  }
+
+  if (last_number !== "") expression.pop();
+
+  last_number += number;
+  expression.push(last_number);
+
+  display_value += number;
+  updateDisplay();
+}
+
+function handleOperatorClick(operator) {
+  if (override) override = false;
+
+  if (expression.length === 3) {
+    calculate();
+  }
+  if (expression.length > 0) {
+    if (last_number === "") {
+      expression.pop();
+      display_value = display_value.slice(0, -1);
+    }
+    expression.push(operator);
+  } else expression.push(0, operator);
+
+  last_number = "";
+  display_value += operator;
+  updateDisplay();
+}
+function handleDotClick() {
+  if (override) override = false;
   if (
-    key === "+" ||
-    key === "-" ||
-    key === "*" ||
-    key === "/" ||
-    keyCode === 187 ||
-    keyCode === 189 ||
-    keyCode === 88 ||
-    keyCode === 191
+    last_number.toString().indexOf(".") === -1 &&
+    (last_number !== "" || expression.length === 0)
   ) {
-    if (key === "+") display.compute("add");
-    else if (key === "-") display.compute("subtract");
-    else if (key === "*") display.compute("multiply");
-    else if (key === "/") display.compute("divide");
-    else if (keyCode === 187) display.compute("add");
-    else if (keyCode === 189) display.compute("subtract");
-    else if (keyCode === 88) display.compute("multiply");
-    else if (keyCode === 191) display.compute("divide");
+    last_number += ".";
+    display_value += ".";
+  }
+  if (last_number !== "") {
+    expression.pop();
+    expression.push(last_number);
   }
 
-  if (key === "Escape") {
-    display.clearAll();
+  updateDisplay();
+}
+function handleDeleteClick() {
+  if (last_number.toString().length > 1 && +last_number > 0) {
+    last_number = last_number.toString().slice(0, -1);
+    expression[expression.length - 1] = last_number;
+  } else if (last_number < 0 && last_number > -10) {
+    last_number = last_number.toString().slice(0, -2);
+    display_value = display_value.toString().slice(0, -2);
+    expression.pop();
+  } else {
+    expression.pop();
+    last_number = +expression[expression.length - 1] || "";
   }
 
-  if (key === "Backspace" || key === "Delete") {
-    display.clear();
+  override = false;
+  display_value = display_value.toString().slice(0, -1);
+  updateDisplay();
+}
+function handleEqualsClick() {
+  if (expression.length === 3) {
+    display_value = calculate();
+    override = true;
   }
+  updateDisplay();
+}
+
+// ### Event Listeners ###
+buttons.forEach((button) => {
+  button.addEventListener("click", () => handleClick(button));
 });
+dot_button.addEventListener("click", handleDotClick);
+clear_button.addEventListener("click", clear);
+delete_button.addEventListener("click", handleDeleteClick);
+equals_button.addEventListener("click", () => handleEqualsClick());
 
-document.addEventListener("keypress", (event) => {
-  const key = event.key;
-
-  if (key === "Enter") {
-    display.compute("equals");
+window.addEventListener("keydown", (e) => {
+  if (e.key >= 0 && e.key <= 9) {
+    handleNumberClick(e.key);
+  } else if (e.key === ".") {
+    handleDotClick();
+  } else if (e.key === "Backspace") {
+    handleDeleteClick();
+  } else if (e.key === "Enter" || e.key === "=") {
+    handleEqualsClick();
+  } else if (e.key === "Escape") {
+    clear();
+  } else if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/") {
+    handleOperatorClick(e.key);
   }
 });

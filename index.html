@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Calculator</title>
-    <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="stylesheet" href="./styles/style.css">
   </head>
-
   <body>
-    <main class="container">
-      <div class="calculator">
-        <div class="display">
-          <div id="previous-value"></div>
-          <div id="current-value"></div>
+    <div class="calculator">
+      <div id="display">0</div>
+        <div class="buttons-grid">
+          <button class="style-A" id="clear"> <span>AC</span> </button>
+          <button class="style-A" id="delete"> <span>B</span> </button>
+          <button class="number style-B"> <span>7</span></button>
+          <button class="number style-B"> <span>8</span> </button>
+          <button class="number style-B"> <span>9</span></button>
+          <button class="operator style-C"> <span>/</span></button>
+          <button class="number style-B"> <span>4</span> </button>
+          <button class="number style-B"> <span>5</span> </button>
+          <button class="number style-B"> <span>6</span> </button>
+          <button class="operator style-C"> <span>*</span></button>
+          <button class="number style-B"> <span>1</span> </button>
+          <button class="number style-B"> <span>2</span></button>
+          <button class="number style-B"> <span>3</span> </button>
+          <button class="operator style-C"> <span>-</span></button>
+          <button class="number style-B"> <span>0</span></button>
+          <button class="style-B" id="dot"> <span>.</span></button>
+          <button class="style-equals" id="equals"> <span>=</span> </button>
+          <button class="operator style-C"> <span>+</span></button>
         </div>
-        <button class="col-2" onclick="display.clearAll()">C</button>
-        <button onclick="display.clear()">B</button>
-        <button class="operator" value="divide">/</button>
-        <button class="number">7</button>
-        <button class="number">8</button>
-        <button class="number">9</button>
-        <button class="operator" value="multiply">X</button>
-        <button class="number">4</button>
-        <button class="number">5</button>
-        <button class="number">6</button>
-        <button class="operator" value="subtract">-</button>
-        <button class="number">1</button>
-        <button class="number">2</button>
-        <button class="number">3</button>
-        <button class="operator" value="add">+</button>
-        <button class="col-2 number">0</button>
-        <button class="number">.</button>
-        <button class="operator" value="equals">=</button>
       </div>
-    </main>
-    <script src="script/main.js"></script>
+    </div>
+    <script src="./script/main.js"></script>
   </body>
 </html>
