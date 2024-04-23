@@ -10,7 +10,7 @@ let display_value = "0";
 let last_number = "";
 let override = true;
 
-// ### Math Functions ###
+// Math Functions
 function add(a, b) {
   return a + b;
 }
@@ -55,7 +55,7 @@ function calculate() {
   return result;
 }
 
-// ### UI Functions ###
+// Functions
 function clear() {
   expression = [];
   display_value = "0";
@@ -157,7 +157,7 @@ function handleEqualsClick() {
   updateDisplay();
 }
 
-// ### Event Listeners ###
+// Event Listeners
 buttons.forEach((button) => {
   button.addEventListener("click", () => handleClick(button));
 });
