@@ -50,6 +50,10 @@ button:hover {
   background-color: rgba(42, 134, 77, 0.698);
 }
 
+button:active {
+  box-shadow: none;
+}
+
 .display {
   grid-column: 1 / 5;
   background-color: #ecf9f1;
