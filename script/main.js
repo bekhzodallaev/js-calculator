@@ -1,13 +1,13 @@
 const display = document.querySelector("#display");
 const buttons = document.querySelectorAll(".number, .operator");
-const dot_button = document.querySelector("#dot");
-const clear_button = document.querySelector("#clear");
-const delete_button = document.querySelector("#delete");
-const equals_button = document.querySelector("#equals");
+const dotButton = document.querySelector("#dot");
+const clearButton = document.querySelector("#clear");
+const deleteButton = document.querySelector("#delete");
+const equalsButton = document.querySelector("#equals");
 
 let expression = [];
-let display_value = "0";
-let last_number = "";
+let displayValue = "0";
+let lastNumber = "";
 let override = true;
 
 // Math Functions
@@ -44,13 +44,16 @@ function operate(operator, a, b) {
 function calculate() {
   let result = operate(expression[1], +expression[0], +expression[2]);
   if (result === "Error: Division by zero") {
-    display_value = "Error: Division by zero";
-    return display_value;
+    alert("Error: Division by zero");
+    expression.pop();
+    lastNumber = "";
+    displayValue = displayValue.slice(0, -1);
+    return displayValue;
   }
   result = Math.round(result * 100) / 100;
   expression = [result];
-  last_number = `${result}`;
-  display_value = `${result}`;
+  lastNumber = `${result}`;
+  displayValue = `${result}`;
 
   return result;
 }
@@ -58,13 +61,13 @@ function calculate() {
 // Functions
 function clear() {
   expression = [];
-  display_value = "0";
-  last_number = "";
+  displayValue = "0";
+  lastNumber = "";
   override = true;
   updateDisplay();
 }
 function updateDisplay() {
-  display.textContent = display_value;
+  display.textContent = displayValue;
 }
 function handleClick(button) {
   if (button.classList.contains("number")) {
@@ -76,25 +79,25 @@ function handleClick(button) {
 function handleNumberClick(number) {
   if (override) {
     expression.pop();
-    display_value = "";
-    last_number = "";
+    displayValue = "";
+    lastNumber = "";
     override = false;
   }
 
-  if (last_number.includes(".") && last_number.split(".")[1].length === 3) {
+  if (lastNumber.includes(".") && lastNumber.split(".")[1].length === 3) {
     return;
   }
 
-  if (last_number === "0" && number === "0") {
+  if (lastNumber === "0" && number === "0") {
     return;
   }
 
-  if (last_number !== "") expression.pop();
+  if (lastNumber !== "") expression.pop();
 
-  last_number += number;
-  expression.push(last_number);
+  lastNumber += number;
+  expression.push(lastNumber);
 
-  display_value += number;
+  displayValue += number;
   updateDisplay();
 }
 
@@ -105,53 +108,53 @@ function handleOperatorClick(operator) {
     calculate();
   }
   if (expression.length > 0) {
-    if (last_number === "") {
+    if (lastNumber === "") {
       expression.pop();
-      display_value = display_value.slice(0, -1);
+      displayValue = displayValue.slice(0, -1);
     }
     expression.push(operator);
   } else expression.push(0, operator);
 
-  last_number = "";
-  display_value += operator;
+  lastNumber = "";
+  displayValue += operator;
   updateDisplay();
 }
 function handleDotClick() {
   if (override) override = false;
   if (
-    last_number.toString().indexOf(".") === -1 &&
-    (last_number !== "" || expression.length === 0)
+    lastNumber.toString().indexOf(".") === -1 &&
+    (lastNumber !== "" || expression.length === 0)
   ) {
-    last_number += ".";
-    display_value += ".";
+    lastNumber += ".";
+    displayValue += ".";
   }
-  if (last_number !== "") {
+  if (lastNumber !== "") {
     expression.pop();
-    expression.push(last_number);
+    expression.push(lastNumber);
   }
 
   updateDisplay();
 }
 function handleDeleteClick() {
-  if (last_number.toString().length > 1 && +last_number > 0) {
-    last_number = last_number.toString().slice(0, -1);
-    expression[expression.length - 1] = last_number;
-  } else if (last_number < 0 && last_number > -10) {
-    last_number = last_number.toString().slice(0, -2);
-    display_value = display_value.toString().slice(0, -2);
+  if (lastNumber.toString().length > 1 && +lastNumber > 0) {
+    lastNumber = lastNumber.toString().slice(0, -1);
+    expression[expression.length - 1] = lastNumber;
+  } else if (lastNumber < 0 && lastNumber > -10) {
+    lastNumber = lastNumber.toString().slice(0, -2);
+    displayValue = displayValue.toString().slice(0, -2);
     expression.pop();
   } else {
     expression.pop();
-    last_number = +expression[expression.length - 1] || "";
+    lastNumber = +expression[expression.length - 1] || "";
   }
 
   override = false;
-  display_value = display_value.toString().slice(0, -1);
+  displayValue = displayValue.toString().slice(0, -1);
   updateDisplay();
 }
 function handleEqualsClick() {
   if (expression.length === 3) {
-    display_value = calculate();
+    displayValue = calculate();
     override = true;
   }
   updateDisplay();
@@ -161,10 +164,10 @@ function handleEqualsClick() {
 buttons.forEach((button) => {
   button.addEventListener("click", () => handleClick(button));
 });
-dot_button.addEventListener("click", handleDotClick);
-clear_button.addEventListener("click", clear);
-delete_button.addEventListener("click", handleDeleteClick);
-equals_button.addEventListener("click", () => handleEqualsClick());
+dotButton.addEventListener("click", handleDotClick);
+clearButton.addEventListener("click", clear);
+deleteButton.addEventListener("click", handleDeleteClick);
+equalsButton.addEventListener("click", () => handleEqualsClick());
 
 window.addEventListener("keydown", (e) => {
   if (e.key >= 0 && e.key <= 9) handleNumberClick(e.key);
