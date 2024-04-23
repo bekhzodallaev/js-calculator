@@ -44,9 +44,7 @@ function operate(operator, a, b) {
 function calculate() {
   let result = operate(expression[1], +expression[0], +expression[2]);
   if (result === "Error: Division by zero") {
-    expression.pop();
-    last_number = "";
-    display_value = display_value.slice(0, -1);
+    display_value = "Error: Division by zero";
     return display_value;
   }
   result = Math.round(result * 100) / 100;
@@ -169,17 +167,11 @@ delete_button.addEventListener("click", handleDeleteClick);
 equals_button.addEventListener("click", () => handleEqualsClick());
 
 window.addEventListener("keydown", (e) => {
-  if (e.key >= 0 && e.key <= 9) {
-    handleNumberClick(e.key);
-  } else if (e.key === ".") {
-    handleDotClick();
-  } else if (e.key === "Backspace") {
-    handleDeleteClick();
-  } else if (e.key === "Enter" || e.key === "=") {
-    handleEqualsClick();
-  } else if (e.key === "Escape") {
-    clear();
-  } else if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/") {
+  if (e.key >= 0 && e.key <= 9) handleNumberClick(e.key);
+  else if (e.key === ".") handleDotClick();
+  else if (e.key === "Backspace") handleDeleteClick();
+  else if (e.key === "Enter" || e.key === "=") handleEqualsClick();
+  else if (e.key === "Escape") clear();
+  else if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/")
     handleOperatorClick(e.key);
-  }
 });
